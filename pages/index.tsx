@@ -52,8 +52,60 @@ export default function Index() {
     getData();
   }, []);
 
+  // updates applied status for given internship
+  function updateApplied(applied: boolean, internship: Internship) {
+    if (!internships) return;
+    const newInternships = internships.slice();
+    const index = newInternships.findIndex(i => i.name === internship.name);
+    if (index === -1) return;
+    newInternships[index].applied = applied;
+    setInternships(newInternships);
+
+    // update local storage
+    const jobName = parseName(internship.name);
+    window.localStorage.setItem(`Applied: ${jobName}`, applied ? 'yes' : 'no');
+  }
+
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        <p>
+          Data from{' '}
+          <a href="https://github.com/pittcsc/Summer2024-Internships" target="_blank" rel="noopener noreferrer">
+            PittCSC
+          </a>
+        </p>
+        <button onClick={() => getData()}>
+          Refresh
+        </button>
+      </div>
+      {
+        !internships ? <p>Loading...</p> :
+          <div className={styles.table}>
+            <div className={styles.row}>
+              <div>Name</div>
+              <div>Location</div>
+              <div>Notes</div>
+              <div>Applied</div>
+            </div>
+            {
+              internships.map((internship, i) =>
+                <div className={styles.row} key={i}>
+                  <Cell text={internship.name} />
+                  <Cell text={internship.location} />
+                  <Cell text={internship.notes} />
+                  <div>
+                    <input
+                      checked={internship.applied}
+                      onChange={e => updateApplied(e.target.checked, internship)}
+                      type="checkbox"
+                    />
+                  </div>
+                </div>
+              )
+            }
+          </div>
+      }
     </div>
   );
 }
