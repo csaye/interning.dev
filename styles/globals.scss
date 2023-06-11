@@ -18,7 +18,12 @@ body,
 }
 
 a {
+  color: #2196f3;
   text-decoration: none;
+
+  &:visited {
+    color: purple;
+  }
 
   &:hover {
     text-decoration: underline;

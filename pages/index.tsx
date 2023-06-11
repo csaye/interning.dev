@@ -75,6 +75,19 @@ export default function Index() {
             PittCSC
           </a>
         </p>
+        <p>
+          This dashboard is open source!{' '}
+          <a href="https://github.com/csaye/pittcsc-dashboard" target="_blank" rel="noopener noreferrer">
+            Check out our GitHub
+          </a>
+        </p>
+        <p>
+          Made by{' '}
+          <a href="https://github.com/csaye" target="_blank" rel="noopener noreferrer">
+            Cooper Saye
+          </a>
+        </p>
+        <span style={{ flexGrow: 1 }} />
         <button onClick={() => getData()}>
           Refresh
         </button>
