@@ -68,28 +68,39 @@ export default function Index() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <p>
+      <h1>PittCSC Dashboard</h1>
+      <ul>
+        <li>
           Data from{' '}
           <a href="https://github.com/pittcsc/Summer2024-Internships" target="_blank" rel="noopener noreferrer">
             PittCSC
           </a>
-        </p>
-        <p>
+        </li>
+        <li>
           This dashboard is open source!{' '}
           <a href="https://github.com/csaye/pittcsc-dashboard" target="_blank" rel="noopener noreferrer">
-            Check out our GitHub
+            Star us on GitHub
           </a>
-        </p>
-        <p>
+        </li>
+        <li>
           Made by{' '}
           <a href="https://github.com/csaye" target="_blank" rel="noopener noreferrer">
             Cooper Saye
           </a>
-        </p>
-        <span style={{ flexGrow: 1 }} />
-        <button onClick={() => getData()}>
-          Refresh
+        </li>
+      </ul>
+      <div className={styles.buttons}>
+        <button onClick={() => window.open('https://github.com/pittcsc/Summer2024-Internships')}>
+          📘
+        </button>
+        <button onClick={() => window.open('https://github.com/csaye/pittcsc-dashboard')}>
+          ⭐
+        </button>
+        <button
+          className={styles.refreshButton}
+          onClick={() => getData()}
+        >
+          🔄
         </button>
       </div>
       {

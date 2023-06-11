@@ -1,14 +1,28 @@
 .container {
   padding: 64px;
+  overflow: scroll;
 
-  >.header {
+  >ul {
+    line-height: 32px;
+  }
+
+  >.buttons {
+    position: absolute;
+    top: 64px;
+    right: 64px;
     display: flex;
     gap: 16px;
-    margin-bottom: 16px;
 
     >button {
-      padding: 8px 12px;
-      font-size: 16px;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      background: transparent;
+      font-size: 48px;
+      border: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 
