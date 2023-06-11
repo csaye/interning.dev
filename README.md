@@ -1,9 +1,8 @@
 # pittcsc-dashboard
 
-https://pittcsc.vercel.app/
+[pittcsc.com](https://www.pittcsc.com/)
 
-- Open source dashboard to help track applications to PittCSC internships!
-- Built with Next.js
-- Contributions welcome
+- Open source dashboard to track PittCSC internship applications!
+- Contributions welcome!
 
-Source: https://github.com/pittcsc/Summer2024-Internships/tree/dev
+Data source: [github.com/pittcsc/Summer2024-Internships](https://github.com/pittcsc/Summer2024-Internships)

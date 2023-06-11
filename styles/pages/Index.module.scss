@@ -1,6 +1,8 @@
 .container {
   padding: 64px;
-  overflow: scroll;
+  width: fit-content;
+  position: relative;
+  min-width: 100%;
 
   >ul {
     line-height: 32px;
@@ -51,15 +53,23 @@
         padding: 16px;
         flex-basis: 0;
         flex-grow: 1;
-        min-width: 180px;
+        min-width: 140px;
 
         &:nth-of-type(3) {
           flex-grow: 3;
+          min-width: 200px;
         }
 
         &:nth-of-type(4) {
           min-width: 100px;
           flex-grow: 0;
+          text-align: center;
+
+          >input {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+          }
         }
 
         &:not(:last-of-type) {
