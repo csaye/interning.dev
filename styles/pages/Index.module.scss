@@ -4,6 +4,15 @@
   position: relative;
   min-width: 100%;
 
+  >h1 {
+    margin-bottom: 8px;
+  }
+
+  >p {
+    font-style: italic;
+    font-size: 14px;
+  }
+
   >ul {
     line-height: 32px;
   }

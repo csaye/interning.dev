@@ -8,7 +8,7 @@ export default function App(props: AppProps) {
   return (
     <>
       <Head>
-        <title>PittCSC Dashboard</title>
+        <title>interning.dev</title>
         <meta name="description" content="Open source dashboard to track PittCSC internship applications!" />
         <link rel="icon" href="/favicons/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />

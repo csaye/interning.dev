@@ -68,7 +68,11 @@ export default function Index() {
 
   return (
     <div className={styles.container}>
-      <h1>PittCSC Dashboard</h1>
+      <h1>interning.dev</h1>
+      <p>
+        ⚠️ Not affiliated with{' '}
+        <a href="https://pittcsc.org/" target="_blank" rel="noopener noreferrer">PittCSC</a>
+      </p>
       <ul>
         <li>
           Data from{' '}
@@ -78,7 +82,7 @@ export default function Index() {
         </li>
         <li>
           This dashboard is open source!{' '}
-          <a href="https://github.com/csaye/pittcsc-dashboard" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/csaye/interning.dev" target="_blank" rel="noopener noreferrer">
             Star us on GitHub
           </a>
         </li>
@@ -93,7 +97,7 @@ export default function Index() {
         <button onClick={() => window.open('https://github.com/pittcsc/Summer2024-Internships')}>
           📘
         </button>
-        <button onClick={() => window.open('https://github.com/csaye/pittcsc-dashboard')}>
+        <button onClick={() => window.open('https://github.com/csaye/interning.dev')}>
           ⭐
         </button>
         <button

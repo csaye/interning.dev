@@ -1,6 +1,6 @@
-# pittcsc-dashboard
+# interning.dev
 
-[pittcsc.com](https://www.pittcsc.com/)
+[interning.dev](https://www.interning.dev/)
 
 - Open source dashboard to track PittCSC internship applications!
 - Contributions welcome!
