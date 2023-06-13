@@ -22,6 +22,12 @@ function parseName(text: string) {
 
 export default function Index() {
   const [internships, setInternships] = useState<Internship[] | null>(null);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // set dark mode on start
+  useEffect(() => {
+    setDarkMode(window.localStorage.getItem('dark-mode') === 'yes')
+  }, []);
 
   // fetch data from github
   async function getData() {
@@ -66,8 +72,14 @@ export default function Index() {
     window.localStorage.setItem(`Applied: ${jobName}`, applied ? 'yes' : 'no');
   }
 
+  function toggleDarkMode() {
+    const isDarkMode = !darkMode;
+    setDarkMode(isDarkMode);
+    window.localStorage.setItem('dark-mode', isDarkMode ? 'yes' : 'no')
+  }
+
   return (
-    <div className={styles.container}>
+    <div className={darkMode ? `${styles.container} ${styles.darkMode}` : styles.container}>
       <h1>interning.dev</h1>
       <p>
         ⚠️ Not affiliated with{' '}
@@ -94,11 +106,8 @@ export default function Index() {
         </li>
       </ul>
       <div className={styles.buttons}>
-        <button onClick={() => window.open('https://github.com/pittcsc/Summer2024-Internships')}>
-          📘
-        </button>
-        <button onClick={() => window.open('https://github.com/csaye/interning.dev')}>
-          ⭐
+        <button onClick={() => toggleDarkMode()}>
+          {darkMode ? '☀️' : '🌙'}
         </button>
         <button
           className={styles.refreshButton}

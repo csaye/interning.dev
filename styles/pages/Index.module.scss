@@ -87,4 +87,19 @@
       }
     }
   }
+
+  &.darkMode {
+    background: #212121;
+    color: #ddd;
+
+    >.table {
+      background: #292929;
+
+      >.row {
+        &:nth-of-type(2n) {
+          background: #444;
+        }
+      }
+    }
+  }
 }
