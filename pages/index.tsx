@@ -141,7 +141,7 @@ export default function Index() {
           🔄
         </button>
       </div>
-      {internships && <p>You have applied to {internships.filter(i => i.applied).length}/{internships.length} internships!</p>}
+      {internships && <p>You have applied to <b>{internships.filter(i => i.applied).length}/{internships.length}</b> internships!</p>}
       <div className={styles.filters}>
         <input
           value={filterText}
