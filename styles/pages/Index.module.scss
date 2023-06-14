@@ -45,16 +45,15 @@
     margin: 24px 0;
 
     >input {
-      padding: 12px;
+      padding: 8px 12px;
       font-size: 16px;
-      border: 2px solid #ddd;
+      border: 1px solid #ccc;
       border-radius: 8px;
       width: 400px;
     }
 
-    >select {
-      padding: 12px;
-      font-size: 16px;
+    >div {
+      min-width: 200px;
     }
   }
 

@@ -1,6 +1,7 @@
 import Cell from '@/components/Cell';
 import styles from '@/styles/pages/Index.module.scss';
 import { useEffect, useMemo, useState } from 'react';
+import Select from 'react-select';
 
 const url = 'https://raw.githubusercontent.com/pittcsc/Summer2024-Internships/dev/README.md';
 const separator = '<!-- Please leave a one line gap between this and the table -->\n';
@@ -12,8 +13,6 @@ type Internship = {
   applied: boolean;
 };
 
-type AppliedType = 'all' | 'yes' | 'no';
-
 function parseName(text: string) {
   if (text.includes('](')) {
     return text.split('](')[0].slice(1);
@@ -22,11 +21,17 @@ function parseName(text: string) {
   return text;
 }
 
+const appliedTypeOptions = [
+  { value: 'all', label: 'All' },
+  { value: 'yes', label: 'Applied' },
+  { value: 'no', label: 'Not Applied' },
+];
+
 export default function Index() {
   const [internships, setInternships] = useState<Internship[] | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const [filterText, setFilterText] = useState('');
-  const [appliedType, setAppliedType] = useState<AppliedType>('all')
+  const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
 
   // filter internships by filter text
   const filteredInternships = useMemo(() => {
@@ -38,8 +43,8 @@ export default function Index() {
         (name.toLowerCase().includes(text) ||
           location.toLowerCase().includes(text) ||
           notes.toLowerCase().includes(text))
-      const appliedMatch = appliedType === 'all' ||
-        ((appliedType === 'yes') === applied)
+      const appliedMatch = appliedType.value === 'all' ||
+        ((appliedType.value === 'yes') === applied)
       return textMatch && appliedMatch
     })
   }, [internships, filterText, appliedType]);
@@ -143,14 +148,13 @@ export default function Index() {
           onChange={e => setFilterText(e.target.value)}
           placeholder="Filter by text..."
         />
-        <select
+        <Select
+          options={appliedTypeOptions}
           value={appliedType}
-          onChange={e => setAppliedType(e.target.value as AppliedType)}
-        >
-          <option value='all'>All</option>
-          <option value='yes'>Applied</option>
-          <option value='no'>Not Applied</option>
-        </select>
+          onChange={value => {
+            if (value) setAppliedType(value)
+          }}
+        />
       </div>
       {
         !filteredInternships ? <p>Loading...</p> :
