@@ -37,6 +37,15 @@
     }
   }
 
+  >.filter {
+    padding: 12px;
+    font-size: 16px;
+    margin-bottom: 24px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 400px;
+  }
+
   >.table {
     display: flex;
     flex-direction: column;

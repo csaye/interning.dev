@@ -1,6 +1,6 @@
 import Cell from '@/components/Cell';
 import styles from '@/styles/pages/Index.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const url = 'https://raw.githubusercontent.com/pittcsc/Summer2024-Internships/dev/README.md';
 const separator = '<!-- Please leave a one line gap between this and the table -->\n';
@@ -23,6 +23,20 @@ function parseName(text: string) {
 export default function Index() {
   const [internships, setInternships] = useState<Internship[] | null>(null);
   const [darkMode, setDarkMode] = useState(false);
+  const [filterText, setFilterText] = useState('');
+
+  // filter internships by filter text
+  const filteredInternships = useMemo(() => {
+    if (!internships) return null
+    if (!filterText) return internships
+    return internships.filter((internship) => {
+      const { name, location, notes } = internship;
+      const text = filterText.toLowerCase()
+      return (name.toLowerCase().includes(text) ||
+        location.toLowerCase().includes(text) ||
+        notes.toLowerCase().includes(text))
+    })
+  }, [internships, filterText]);
 
   // set dark mode on start
   useEffect(() => {
@@ -116,32 +130,39 @@ export default function Index() {
           🔄
         </button>
       </div>
+      <input
+        className={styles.filter}
+        value={filterText}
+        onChange={e => setFilterText(e.target.value)}
+        placeholder="Filter by text..."
+      />
       {
-        !internships ? <p>Loading...</p> :
-          <div className={styles.table}>
-            <div className={styles.row}>
-              <div>Name</div>
-              <div>Location</div>
-              <div>Notes</div>
-              <div>Applied</div>
-            </div>
-            {
-              internships.map((internship, i) =>
-                <div className={styles.row} key={i}>
-                  <Cell text={internship.name} />
-                  <Cell text={internship.location} />
-                  <Cell text={internship.notes} />
-                  <div>
-                    <input
-                      checked={internship.applied}
-                      onChange={e => updateApplied(e.target.checked, internship)}
-                      type="checkbox"
-                    />
+        !filteredInternships ? <p>Loading...</p> :
+          !filteredInternships.length ? <p>No internships found</p> :
+            <div className={styles.table}>
+              <div className={styles.row}>
+                <div>Name</div>
+                <div>Location</div>
+                <div>Notes</div>
+                <div>Applied</div>
+              </div>
+              {
+                filteredInternships.map((internship, i) =>
+                  <div className={styles.row} key={i}>
+                    <Cell text={internship.name} />
+                    <Cell text={internship.location} />
+                    <Cell text={internship.notes} />
+                    <div>
+                      <input
+                        checked={internship.applied}
+                        onChange={e => updateApplied(e.target.checked, internship)}
+                        type="checkbox"
+                      />
+                    </div>
                   </div>
-                </div>
-              )
-            }
-          </div>
+                )
+              }
+            </div>
       }
     </div>
   );
