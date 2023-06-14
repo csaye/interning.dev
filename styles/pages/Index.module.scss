@@ -43,6 +43,7 @@
     align-items: center;
     justify-content: space-between;
     margin: 24px 0;
+    gap: 16px;
 
     >input {
       padding: 8px 12px;
@@ -53,6 +54,7 @@
     }
 
     >div {
+      flex-shrink: 0;
       min-width: 200px;
       color: #000;
     }
