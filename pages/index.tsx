@@ -30,13 +30,14 @@ const appliedTypeOptions = [
 export default function Index() {
   const [internships, setInternships] = useState<Internship[] | null>(null);
   const [darkMode, setDarkMode] = useState(false);
+  const [flipped, setFlipped] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
 
   // filter internships by filter text
   const filteredInternships = useMemo(() => {
     if (!internships) return null
-    return internships.filter((internship) => {
+    const newInternships = internships.filter((internship) => {
       const { name, location, notes, applied } = internship;
       const text = filterText.toLowerCase()
       const textMatch = !filterText ||
@@ -47,11 +48,14 @@ export default function Index() {
         ((appliedType.value === 'yes') === applied)
       return textMatch && appliedMatch
     })
-  }, [internships, filterText, appliedType]);
+    if (flipped) newInternships.reverse()
+    return newInternships
+  }, [internships, filterText, appliedType, flipped]);
 
-  // set dark mode on start
+  // initialize settings on start
   useEffect(() => {
     setDarkMode(window.localStorage.getItem('dark-mode') === 'yes')
+    setFlipped(window.localStorage.getItem('flipped') === 'yes')
   }, []);
 
   // fetch data from github
@@ -100,7 +104,13 @@ export default function Index() {
   function toggleDarkMode() {
     const isDarkMode = !darkMode;
     setDarkMode(isDarkMode);
-    window.localStorage.setItem('dark-mode', isDarkMode ? 'yes' : 'no')
+    window.localStorage.setItem('dark-mode', isDarkMode ? 'yes' : 'no');
+  }
+
+  function toggleFlipped() {
+    const isFlipped = !flipped;
+    setFlipped(isFlipped);
+    window.localStorage.setItem('flipped', isFlipped ? 'yes' : 'no');
   }
 
   return (
@@ -131,6 +141,9 @@ export default function Index() {
         </li>
       </ul>
       <div className={styles.buttons}>
+        <button onClick={() => toggleFlipped()}>
+          {flipped ? '⬆️' : '⬇️'}
+        </button>
         <button onClick={() => toggleDarkMode()}>
           {darkMode ? '☀️' : '🌙'}
         </button>
