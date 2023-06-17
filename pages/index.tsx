@@ -197,7 +197,7 @@ export default function Index() {
               }
             </div>
       }
-      <div className={styles.footer_buttons}>
+      <div className={styles.footer}>
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           ⬆️
         </button>
