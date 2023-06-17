@@ -181,7 +181,7 @@ export default function Index() {
               </div>
               {
                 filteredInternships.map((internship, i) =>
-                  <div className={styles.row} key={i}>
+                  <div className={internship.applied ? `${styles.row} ${styles.selected}` : styles.row} key={i}>
                     <Cell text={internship.name} />
                     <Cell text={internship.location} />
                     <Cell text={internship.notes} />
