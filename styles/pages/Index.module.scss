@@ -81,6 +81,10 @@
         background: #efefef;
       }
 
+      &.selected {
+        background: #fffdcc;
+      }
+
       >div {
         padding: 16px;
         flex-basis: 0;
@@ -121,6 +125,10 @@
       >.row {
         &:nth-of-type(2n) {
           background: #444;
+        }
+
+        &.selected {
+          background: #636342;
         }
       }
     }
