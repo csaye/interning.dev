@@ -5,27 +5,27 @@
   min-width: 100%;
   min-height: 100%;
 
-  >h1 {
+  > h1 {
     margin-bottom: 8px;
   }
 
-  >p {
+  > p {
     font-style: italic;
     font-size: 14px;
   }
 
-  >ul {
+  > ul {
     line-height: 32px;
   }
 
-  >.buttons {
+  > .buttons {
     position: absolute;
     top: 64px;
     right: 64px;
     display: flex;
     gap: 16px;
 
-    >button {
+    > button {
       width: 48px;
       height: 48px;
       padding: 0;
@@ -38,14 +38,14 @@
     }
   }
 
-  >.footer {
+  > .footer {
     margin-top: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 16px;
 
-    >button {
+    > button {
       width: 48px;
       height: 48px;
       padding: 0;
@@ -58,14 +58,14 @@
     }
   }
 
-  >.filters {
+  > .filters {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin: 24px 0;
     gap: 16px;
 
-    >input {
+    > input {
       padding: 8px 12px;
       font-size: 16px;
       border: 1px solid #ccc;
@@ -73,19 +73,19 @@
       width: 400px;
     }
 
-    >div {
+    > div {
       flex-shrink: 0;
       min-width: 200px;
       color: #000;
     }
   }
 
-  >.table {
+  > .table {
     display: flex;
     flex-direction: column;
     border: 1px solid #000;
 
-    >.row {
+    > .row {
       display: flex;
 
       &:first-of-type {
@@ -105,7 +105,7 @@
         background: #fffdcc;
       }
 
-      >div {
+      > div {
         padding: 16px;
         flex-basis: 0;
         flex-grow: 1;
@@ -121,7 +121,7 @@
           flex-grow: 0;
           text-align: center;
 
-          >input {
+          > input {
             cursor: pointer;
             width: 24px;
             height: 24px;
@@ -139,10 +139,10 @@
     background: #212121;
     color: #ddd;
 
-    >.table {
+    > .table {
       background: #292929;
 
-      >.row {
+      > .row {
         &:nth-of-type(2n) {
           background: #444;
         }
