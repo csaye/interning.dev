@@ -1,4 +1,5 @@
 import Cell from '@/components/Cell'
+import levels from '@/levels.fyi.json'
 import styles from '@/styles/pages/Index.module.scss'
 import { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
@@ -123,6 +124,18 @@ export default function Index() {
     window.localStorage.setItem('flipped', isFlipped ? 'yes' : 'no')
   }
 
+  function getLevels(internship: Internship) {
+    const name = parseName(internship.name)
+    const level: string | undefined = (levels as any)[name]
+    if (!level) return null
+
+    return (
+      <a href={level} target='_blank' rel='noopener noreferrer'>
+        🔗
+      </a>
+    )
+  }
+
   return (
     <div
       className={
@@ -229,6 +242,7 @@ export default function Index() {
               <Cell text={internship.name} />
               <Cell text={internship.location} />
               <Cell text={internship.notes} />
+              <div className={styles.small}>{getLevels(internship)}</div>
               <div className={styles.small}>
                 <input
                   checked={internship.applied}
