@@ -214,7 +214,8 @@ export default function Index() {
             <div>Name</div>
             <div>Location</div>
             <div>Notes</div>
-            <div>Applied</div>
+            <div className={styles.small}>levels.fyi</div>
+            <div className={styles.small}>Applied</div>
           </div>
           {filteredInternships.map((internship, i) => (
             <div
@@ -228,7 +229,7 @@ export default function Index() {
               <Cell text={internship.name} />
               <Cell text={internship.location} />
               <Cell text={internship.notes} />
-              <div>
+              <div className={styles.small}>
                 <input
                   checked={internship.applied}
                   onChange={(e) => updateApplied(e.target.checked, internship)}

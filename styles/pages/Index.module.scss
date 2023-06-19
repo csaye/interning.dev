@@ -91,6 +91,7 @@
       &:first-of-type {
         font-weight: bold;
         text-align: center;
+        white-space: nowrap;
       }
 
       &:not(&:last-of-type) {
@@ -116,10 +117,14 @@
           min-width: 200px;
         }
 
-        &:nth-of-type(4) {
+        &.small {
           min-width: 100px;
           flex-grow: 0;
           text-align: center;
+
+          > a {
+            font-size: 24px;
+          }
 
           > input {
             cursor: pointer;
