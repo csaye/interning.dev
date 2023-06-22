@@ -186,11 +186,11 @@ export default function Index() {
         </li>
       </ul>
       <div className={styles.buttons}>
-        <button onClick={() => toggleFlipped()}>{flipped ? '⬆️' : '⬇️'}</button>
-        <button onClick={() => toggleDarkMode()}>
+        <button aria-label="Toggle ascending/descending order" onClick={() => toggleFlipped()}>{flipped ? '⬆️' : '⬇️'}</button>
+        <button aria-label= "Toggle dark/light mode" onClick={() => toggleDarkMode()}>
           {darkMode ? '☀️' : '🌙'}
         </button>
-        <button className={styles.refreshButton} onClick={() => getData()}>
+        <button aria-label="Refresh internship list" className={styles.refreshButton} onClick={() => getData()}>
           🔄
         </button>
       </div>
@@ -215,6 +215,7 @@ export default function Index() {
           onChange={(value) => {
             if (value) setAppliedType(value)
           }}
+          aria-label="Applied Type"
         />
       </div>
       {!filteredInternships ? (
@@ -248,6 +249,7 @@ export default function Index() {
                   checked={internship.applied}
                   onChange={(e) => updateApplied(e.target.checked, internship)}
                   type='checkbox'
+                  aria-label = "Applied Status Checkbox"
                 />
               </div>
             </div>
@@ -255,7 +257,7 @@ export default function Index() {
         </div>
       )}
       <div className={styles.footer}>
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <button aria-label="Back to top of list" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           ⬆️
         </button>
       </div>
