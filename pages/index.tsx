@@ -223,6 +223,13 @@ export default function Index() {
             {internships.filter((i) => i.applied).length}/{internships.length}
           </b>{' '}
           internships!
+          {filteredInternships &&
+            filteredInternships.length !== internships.length && (
+              <>
+                {' '}
+                (showing <b>{filteredInternships.length})</b>
+              </>
+            )}
         </p>
       )}
       <div className={styles.filters}>
