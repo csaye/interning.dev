@@ -24,8 +24,14 @@ function parseName(text: string) {
   return text
 }
 
+const closedTypeOptions = [
+  { value: 'all', label: 'Closed & Not Closed' },
+  { value: 'yes', label: 'Closed' },
+  { value: 'no', label: 'Not Closed' },
+]
+
 const appliedTypeOptions = [
-  { value: 'all', label: 'All' },
+  { value: 'all', label: 'Applied & Not Applied' },
   { value: 'yes', label: 'Applied' },
   { value: 'no', label: 'Not Applied' },
 ]
@@ -35,9 +41,10 @@ export default function Index() {
   const [darkMode, setDarkMode] = useState(false)
   const [flipped, setFlipped] = useState(false)
   const [filterText, setFilterText] = useState('')
+  const [closedType, setClosedType] = useState(closedTypeOptions[0])
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
 
-  // filter internships by filter text
+  // filter internships
   const filteredInternships = useMemo(() => {
     if (!internships) return null
     const newInternships = internships.filter((internship) => {
@@ -48,13 +55,16 @@ export default function Index() {
         name.toLowerCase().includes(text) ||
         location.toLowerCase().includes(text) ||
         notes.toLowerCase().includes(text)
+      const closedMatch =
+        closedType.value === 'all' ||
+        (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
       const appliedMatch =
         appliedType.value === 'all' || (appliedType.value === 'yes') === applied
-      return textMatch && appliedMatch
+      return textMatch && closedMatch && appliedMatch
     })
     if (flipped) newInternships.reverse()
     return newInternships
-  }, [internships, filterText, appliedType, flipped])
+  }, [internships, flipped, filterText, closedType.value, appliedType.value])
 
   // initialize settings on start
   useEffect(() => {
@@ -220,6 +230,15 @@ export default function Index() {
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           placeholder='Filter by text...'
+        />
+        <span style={{ flexGrow: 1 }} />
+        <Select
+          options={closedTypeOptions}
+          value={closedType}
+          onChange={(value) => {
+            if (value) setClosedType(value)
+          }}
+          aria-label='Closed Type'
         />
         <Select
           options={appliedTypeOptions}
