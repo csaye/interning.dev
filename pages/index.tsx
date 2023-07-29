@@ -36,6 +36,13 @@ const appliedTypeOptions = [
   { value: 'no', label: 'Not Applied' },
 ]
 
+const sponsorshipTypeOptions = [
+  { value: 'all', label: 'All' },
+  { value: 'green_card', label: 'US Citizenship Not Required' },
+  { value: 'yes', label: 'Sponsorship Offered' },
+  { value: 'no', label: 'No Sponsorship' },
+]
+
 export default function Index() {
   const [internships, setInternships] = useState<Internship[] | null>(null)
   const [darkMode, setDarkMode] = useState(false)
@@ -43,6 +50,7 @@ export default function Index() {
   const [filterText, setFilterText] = useState('')
   const [closedType, setClosedType] = useState(closedTypeOptions[0])
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
+  const [sponsorshipType, setSponsorshipType] = useState(sponsorshipTypeOptions[0])
 
   // filter internships
   const filteredInternships = useMemo(() => {
@@ -60,11 +68,16 @@ export default function Index() {
         (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
       const appliedMatch =
         appliedType.value === 'all' || (appliedType.value === 'yes') === applied
-      return textMatch && closedMatch && appliedMatch
+      const sponsorshipMatch =
+        sponsorshipType.value === 'all' ||
+        (sponsorshipType.value === 'yes') && !notes.toLowerCase().includes('no sponsorship') ||
+        (sponsorshipType.value === 'green_card' && !notes.toLowerCase().includes('citizen')) ||
+        (sponsorshipType.value === 'no') && notes.toLowerCase().includes('no sponsorship')
+      return textMatch && closedMatch && appliedMatch && sponsorshipMatch
     })
     if (flipped) newInternships.reverse()
     return newInternships
-  }, [internships, flipped, filterText, closedType.value, appliedType.value])
+  }, [internships, flipped, filterText, closedType.value, appliedType.value, sponsorshipType.value])
 
   // initialize settings on start
   useEffect(() => {
@@ -254,6 +267,14 @@ export default function Index() {
             if (value) setAppliedType(value)
           }}
           aria-label='Applied Type'
+        />
+        <Select
+          options={sponsorshipTypeOptions}
+          value={sponsorshipType}
+          onChange={(value) => {
+            if (value) setSponsorshipType(value)
+          }}
+          aria-label='Sponsorship Type'
         />
       </div>
       {!filteredInternships ? (
