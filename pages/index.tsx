@@ -25,13 +25,13 @@ function parseName(text: string) {
 }
 
 const closedTypeOptions = [
-  { value: 'all', label: 'Closed & Not Closed' },
+  { value: 'all', label: 'All' },
   { value: 'yes', label: 'Closed' },
   { value: 'no', label: 'Not Closed' },
 ]
 
 const appliedTypeOptions = [
-  { value: 'all', label: 'Applied & Not Applied' },
+  { value: 'all', label: 'All' },
   { value: 'yes', label: 'Applied' },
   { value: 'no', label: 'Not Applied' },
 ]
@@ -50,7 +50,9 @@ export default function Index() {
   const [filterText, setFilterText] = useState('')
   const [closedType, setClosedType] = useState(closedTypeOptions[0])
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
-  const [sponsorshipType, setSponsorshipType] = useState(sponsorshipTypeOptions[0])
+  const [sponsorshipType, setSponsorshipType] = useState(
+    sponsorshipTypeOptions[0]
+  )
 
   // filter internships
   const filteredInternships = useMemo(() => {
@@ -70,14 +72,24 @@ export default function Index() {
         appliedType.value === 'all' || (appliedType.value === 'yes') === applied
       const sponsorshipMatch =
         sponsorshipType.value === 'all' ||
-        (sponsorshipType.value === 'yes') && !notes.toLowerCase().includes('no sponsorship') ||
-        (sponsorshipType.value === 'green_card' && !notes.toLowerCase().includes('citizen')) ||
-        (sponsorshipType.value === 'no') && notes.toLowerCase().includes('no sponsorship')
+        (sponsorshipType.value === 'yes' &&
+          !notes.toLowerCase().includes('no sponsorship')) ||
+        (sponsorshipType.value === 'green_card' &&
+          !notes.toLowerCase().includes('citizen')) ||
+        (sponsorshipType.value === 'no' &&
+          notes.toLowerCase().includes('no sponsorship'))
       return textMatch && closedMatch && appliedMatch && sponsorshipMatch
     })
     if (flipped) newInternships.reverse()
     return newInternships
-  }, [internships, flipped, filterText, closedType.value, appliedType.value, sponsorshipType.value])
+  }, [
+    internships,
+    flipped,
+    filterText,
+    closedType.value,
+    appliedType.value,
+    sponsorshipType.value,
+  ])
 
   // initialize settings on start
   useEffect(() => {
@@ -252,30 +264,39 @@ export default function Index() {
           placeholder='Filter by text...'
         />
         <span style={{ flexGrow: 1 }} />
-        <Select
-          options={closedTypeOptions}
-          value={closedType}
-          onChange={(value) => {
-            if (value) setClosedType(value)
-          }}
-          aria-label='Closed Type'
-        />
-        <Select
-          options={appliedTypeOptions}
-          value={appliedType}
-          onChange={(value) => {
-            if (value) setAppliedType(value)
-          }}
-          aria-label='Applied Type'
-        />
-        <Select
-          options={sponsorshipTypeOptions}
-          value={sponsorshipType}
-          onChange={(value) => {
-            if (value) setSponsorshipType(value)
-          }}
-          aria-label='Sponsorship Type'
-        />
+        <label>
+          <span>Closed?</span>
+          <Select
+            options={closedTypeOptions}
+            value={closedType}
+            onChange={(value) => {
+              if (value) setClosedType(value)
+            }}
+            aria-label='Closed Type'
+          />
+        </label>
+        <label>
+          <span>Applied?</span>
+          <Select
+            options={appliedTypeOptions}
+            value={appliedType}
+            onChange={(value) => {
+              if (value) setAppliedType(value)
+            }}
+            aria-label='Applied Type'
+          />
+        </label>
+        <label>
+          <span>Sponsorship?</span>
+          <Select
+            options={sponsorshipTypeOptions}
+            value={sponsorshipType}
+            onChange={(value) => {
+              if (value) setSponsorshipType(value)
+            }}
+            aria-label='Sponsorship Type'
+          />
+        </label>
       </div>
       {!filteredInternships ? (
         <p>Loading...</p>
