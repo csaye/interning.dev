@@ -70,7 +70,8 @@ export default function Index() {
         appliedType.value === 'all' || (appliedType.value === 'yes') === applied
       const sponsorshipMatch =
         sponsorshipType.value === 'all' ||
-        (sponsorshipType.value === 'yes') && !notes.toLowerCase().includes('no sponsorship') ||
+        (sponsorshipType.value === 'yes') && !notes.toLowerCase().includes('no sponsorship') 
+                                          && !notes.toLowerCase().includes('citizen') ||
         (sponsorshipType.value === 'green_card' && !notes.toLowerCase().includes('citizen')) ||
         (sponsorshipType.value === 'no') && notes.toLowerCase().includes('no sponsorship')
       return textMatch && closedMatch && appliedMatch && sponsorshipMatch
