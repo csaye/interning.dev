@@ -60,8 +60,8 @@
 
   > .filters {
     display: flex;
-    align-items: center;
-    margin: 24px 0;
+    align-items: flex-end;
+    margin: 8px 0 24px 0;
     gap: 16px;
 
     > input {
@@ -72,10 +72,21 @@
       width: 400px;
     }
 
-    > div {
+    > label {
       flex-shrink: 0;
-      min-width: 200px;
-      color: #000;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      > span {
+        font-size: 12px;
+        color: #444;
+      }
+
+      > div {
+        min-width: 160px;
+        color: #000;
+      }
     }
   }
 

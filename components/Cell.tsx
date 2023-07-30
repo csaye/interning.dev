@@ -7,7 +7,7 @@ type Props = {
 export default function Cell(props: Props) {
   const { text } = props
 
-  const parsedText = text.replaceAll(/<br\s*\/?>/g, '\n\n')
+  const parsedText = text.replaceAll(/<\/?br\s*\/?>/g, '\n\n')
 
   return (
     <div>
