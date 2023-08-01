@@ -60,26 +60,30 @@ export default function Index() {
     const newInternships = internships.filter((internship) => {
       const { name, location, notes, applied } = internship
       const text = filterText.toLowerCase()
+
       const textMatch =
         !filterText ||
         name.toLowerCase().includes(text) ||
         location.toLowerCase().includes(text) ||
         notes.toLowerCase().includes(text)
+
       const closedMatch =
         closedType.value === 'all' ||
         (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
+
       const appliedMatch =
         appliedType.value === 'all' || (appliedType.value === 'yes') === applied
+
+      const hasCitizen = notes.toLowerCase().includes('citizen')
+      const hasSponsorship =
+        !notes.toLowerCase().includes('no sponsorship') && !hasCitizen
+
       const sponsorshipMatch =
         sponsorshipType.value === 'all' ||
-        (sponsorshipType.value === 'yes' &&
-          !notes.toLowerCase().includes('no sponsorship') && 
-          !notes.toLowerCase().includes('citizen')) ||
-        (sponsorshipType.value === 'green_card' &&
-          !notes.toLowerCase().includes('citizen')) ||
-        (sponsorshipType.value === 'no' &&
-          (notes.toLowerCase().includes('no sponsorship') || 
-          notes.toLowerCase().includes('citizen')))
+        (sponsorshipType.value === 'yes' && hasSponsorship) ||
+        (sponsorshipType.value === 'green_card' && hasCitizen) ||
+        (sponsorshipType.value === 'no' && !hasSponsorship)
+
       return textMatch && closedMatch && appliedMatch && sponsorshipMatch
     })
     if (flipped) newInternships.reverse()
