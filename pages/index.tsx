@@ -81,7 +81,7 @@ export default function Index() {
       const sponsorshipMatch =
         sponsorshipType.value === 'all' ||
         (sponsorshipType.value === 'yes' && hasSponsorship) ||
-        (sponsorshipType.value === 'green_card' && hasCitizen) ||
+        (sponsorshipType.value === 'green_card' && !hasCitizen) ||
         (sponsorshipType.value === 'no' && !hasSponsorship)
 
       return textMatch && closedMatch && appliedMatch && sponsorshipMatch
