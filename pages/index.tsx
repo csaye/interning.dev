@@ -174,6 +174,24 @@ export default function Index() {
     window.localStorage.setItem('flipped', isFlipped ? 'yes' : 'no')
   }
 
+  function getLink(rawText: string) {
+    if (rawText.includes('<a href="')) {
+      return (
+        <a href={getLinkText()} target='_blank' rel='noopener noreferrer'>
+          🔗
+        </a>
+      )
+    }
+
+    return rawText
+
+    function getLinkText() {
+      const link = rawText.split('<a href="')[1].split('">')[0]
+      if (link.includes('?utm_source')) return link.split('?utm_source')[0]
+      return link
+    }
+  }
+
   function getLevels(internship: Internship) {
     const name = parseName(internship.name)
     const level: string | undefined = (levels as any)[name]
@@ -323,6 +341,7 @@ export default function Index() {
             <div>Name</div>
             <div>Location</div>
             <div>Notes</div>
+            <div className={styles.small}>Link</div>
             <div className={styles.small}>levels.fyi</div>
             <div className={styles.small}>Applied</div>
           </div>
@@ -338,6 +357,7 @@ export default function Index() {
               <Cell text={internship.name} />
               <Cell text={internship.location} />
               <Cell text={internship.notes} />
+              <div className={styles.small}>{getLink(internship.link)}</div>
               <div className={styles.small}>{getLevels(internship)}</div>
               <div className={styles.small}>
                 <input
