@@ -152,10 +152,9 @@ export default function Index() {
   // updates applied status for given internship
   function updateApplied(applied: boolean, internship: Internship) {
     if (!internships) return
-    const newInternships = internships.slice()
-    const index = newInternships.findIndex((i) => i.name === internship.name)
-    if (index === -1) return
-    newInternships[index].applied = applied
+    const newInternships = internships.map((i) =>
+      i.name === internship.name ? { ...i, applied } : i
+    )
     setInternships(newInternships)
 
     // update local storage
@@ -208,7 +207,7 @@ export default function Index() {
         <li>
           Data from{' '}
           <a
-            href='https://github.com/pittcsc/Summer2024-Internships'
+            href='https://github.com/SimplifyJobs/Summer2024-Internships'
             target='_blank'
             rel='noopener noreferrer'
           >
