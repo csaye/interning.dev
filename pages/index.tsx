@@ -5,18 +5,23 @@ import { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
 
 const url =
-  'https://raw.githubusercontent.com/pittcsc/Summer2024-Internships/dev/README.md'
-const separator =
-  '<!-- Please leave a one line gap between this and the table -->\n'
+  'https://raw.githubusercontent.com/SimplifyJobs/Summer2024-Internships/dev/README.md'
+const startSeparator =
+  '<!-- Please leave a one line gap between this and the table TABLE_START (DO NOT CHANGE THIS LINE) -->\n'
+const endSeparator =
+  '<!-- Please leave a one line gap between this and the table TABLE_END (DO NOT CHANGE THIS LINE) -->'
 
 type Internship = {
   name: string
-  location: string
   notes: string
+  location: string
+  link: string
   applied: boolean
 }
 
-function parseName(text: string) {
+function parseName(rawText: string) {
+  const text = rawText.replaceAll('*', '')
+
   if (text.includes('](')) {
     return text.split('](')[0].slice(1)
   }
@@ -111,7 +116,11 @@ export default function Index() {
       throw new Error('An error occurred fetching data')
     }
     const text = await response.text()
-    const content = text.split(separator)[1].trim()
+    const content = text
+      .split(startSeparator)[1]
+      .trim()
+      .split(endSeparator)[0]
+      .trim()
     const lines = content.split('\n').slice(2)
     const jobs = lines.map((line) =>
       line
@@ -122,8 +131,9 @@ export default function Index() {
     setInternships(
       jobs.map((job) => ({
         name: job[0],
-        location: job[1],
-        notes: job[2],
+        notes: job[1],
+        location: job[2],
+        link: job[3],
         applied: getApplied(job[0]),
       }))
     )
