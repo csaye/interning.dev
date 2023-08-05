@@ -154,6 +154,12 @@
     background: #212121;
     color: #ddd;
 
+    .filters {
+      label > span {
+        color: #ddd;
+      }
+    }
+
     > .table {
       background: #292929;
 

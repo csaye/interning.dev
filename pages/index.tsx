@@ -26,60 +26,80 @@ const sponsorshipTypeOptions = [
 ]
 
 export default function Index() {
-  const [internships, setInternships] = useState<Internship[] | null>(null)
+  // const [internships, setInternships] = useState<Internship[] | null>(null)
   const [darkMode, setDarkMode] = useState(false)
   const [flipped, setFlipped] = useState(false)
   const [filterText, setFilterText] = useState('')
-  const [closedType, setClosedType] = useState(closedTypeOptions[0])
+  // const [closedType, setClosedType] = useState(closedTypeOptions[0])
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
-  const [sponsorshipType, setSponsorshipType] = useState(
-    sponsorshipTypeOptions[0]
-  )
+  // const [sponsorshipType, setSponsorshipType] = useState(
+  // sponsorshipTypeOptions[0]
+  // )
   const [companies, setCompanies] = useState<Company[] | null>(null)
 
-  // filter internships
-  const filteredInternships = useMemo(() => {
-    if (!internships) return null
-    const newInternships = [...internships]
-    // const newInternships = internships.filter((internship) => {
-    //   const { name, location, notes, applied } = internship
-    //   const text = filterText.toLowerCase()
+  const filteredCompanies = useMemo(() => {
+    if (!companies) return null
 
-    //   const textMatch =
-    //     !filterText ||
-    //     name.toLowerCase().includes(text) ||
-    //     location.toLowerCase().includes(text) ||
-    //     notes.toLowerCase().includes(text)
+    const newCompanies = companies.filter(({ applied }) => {
+      const appliedMatch =
+        appliedType.value === 'all' || (appliedType.value === 'yes') === applied
+      return appliedMatch
+    })
 
-    //   const closedMatch =
-    //     closedType.value === 'all' ||
-    //     (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
+    if (flipped) newCompanies.reverse()
+    return newCompanies
+  }, [appliedType.value, companies, flipped])
 
-    //   const appliedMatch =
-    //     appliedType.value === 'all' || (appliedType.value === 'yes') === applied
+  // // filter internships
+  // const filteredInternships = useMemo(() => {
+  //   if (!internships) return null
+  //   const newInternships = [...internships]
+  // const newInternships = internships.filter((internship) => {
+  //   const { name, location, notes, applied } = internship
+  //   const text = filterText.toLowerCase()
 
-    //   const hasCitizen = notes.toLowerCase().includes('citizen')
-    //   const hasSponsorship =
-    //     !notes.toLowerCase().includes('no sponsorship') && !hasCitizen
+  //   const textMatch =
+  //     !filterText ||
+  //     name.toLowerCase().includes(text) ||
+  //     location.toLowerCase().includes(text) ||
+  //     notes.toLowerCase().includes(text)
 
-    //   const sponsorshipMatch =
-    //     sponsorshipType.value === 'all' ||
-    //     (sponsorshipType.value === 'yes' && hasSponsorship) ||
-    //     (sponsorshipType.value === 'green_card' && !hasCitizen) ||
-    //     (sponsorshipType.value === 'no' && !hasSponsorship)
+  //   const closedMatch =
+  //     closedType.value === 'all' ||
+  //     (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
 
-    //   return textMatch && closedMatch && appliedMatch && sponsorshipMatch
-    // })
-    if (flipped) newInternships.reverse()
-    return newInternships
-  }, [internships, flipped])
+  //   const appliedMatch =
+  //     appliedType.value === 'all' || (appliedType.value === 'yes') === applied
 
-  // update companies when internships update
+  //   const hasCitizen = notes.toLowerCase().includes('citizen')
+  //   const hasSponsorship =
+  //     !notes.toLowerCase().includes('no sponsorship') && !hasCitizen
+
+  //   const sponsorshipMatch =
+  //     sponsorshipType.value === 'all' ||
+  //     (sponsorshipType.value === 'yes' && hasSponsorship) ||
+  //     (sponsorshipType.value === 'green_card' && !hasCitizen) ||
+  //     (sponsorshipType.value === 'no' && !hasSponsorship)
+
+  //   return textMatch && closedMatch && appliedMatch && sponsorshipMatch
+  // })
+  //   if (flipped) newInternships.reverse()
+  //   return newInternships
+  // }, [internships, flipped])
+
+  // initialize settings on start
   useEffect(() => {
-    if (!filteredInternships) return
+    setDarkMode(window.localStorage.getItem('dark-mode') === 'yes')
+    setFlipped(window.localStorage.getItem('flipped') === 'yes')
+  }, [])
+
+  async function getData() {
+    setCompanies(null)
+
+    const internships = await getInternships()
 
     const newCompanies: Company[] = []
-    for (const internship of filteredInternships) {
+    for (const internship of internships) {
       const company = newCompanies.find(
         ({ name }) => name === internship.company
       )
@@ -93,23 +113,12 @@ export default function Index() {
         })
       }
     }
+
     setCompanies(newCompanies)
 
     function getApplied(company: string) {
       return window.localStorage.getItem(`Applied: ${company}`) === 'yes'
     }
-  }, [filteredInternships])
-
-  // initialize settings on start
-  useEffect(() => {
-    setDarkMode(window.localStorage.getItem('dark-mode') === 'yes')
-    setFlipped(window.localStorage.getItem('flipped') === 'yes')
-  }, [])
-
-  async function getData() {
-    setInternships(null)
-    const internships = await getInternships()
-    setInternships(internships)
   }
 
   // get data on start
@@ -139,24 +148,6 @@ export default function Index() {
     const isFlipped = !flipped
     setFlipped(isFlipped)
     window.localStorage.setItem('flipped', isFlipped ? 'yes' : 'no')
-  }
-
-  function getLink(rawText: string) {
-    if (rawText.includes('<a href="')) {
-      return (
-        <a href={getLinkText()} target='_blank' rel='noopener noreferrer'>
-          🔗
-        </a>
-      )
-    }
-
-    return rawText
-
-    function getLinkText() {
-      const link = rawText.split('<a href="')[1].split('">')[0]
-      if (link.includes('?utm_source')) return link.split('?utm_source')[0]
-      return link
-    }
   }
 
   function getLevels(company: string) {
@@ -247,10 +238,10 @@ export default function Index() {
             {companies.filter((c) => c.applied).length}/{companies.length}
           </b>{' '}
           companies!
-          {filteredInternships && (
+          {filteredCompanies && (
             <>
               {' '}
-              (showing <b>{filteredInternships.length}</b> internships)
+              (showing <b>{filteredCompanies.length}</b>)
             </>
           )}
         </p>
@@ -262,7 +253,7 @@ export default function Index() {
           placeholder='Filter by text...'
         />
         <span style={{ flexGrow: 1 }} />
-        <label>
+        {/* <label>
           <span>Closed?</span>
           <Select
             options={closedTypeOptions}
@@ -272,7 +263,7 @@ export default function Index() {
             }}
             aria-label='Closed Type'
           />
-        </label>
+        </label> */}
         <label>
           <span>Applied?</span>
           <Select
@@ -284,7 +275,7 @@ export default function Index() {
             aria-label='Applied Type'
           />
         </label>
-        <label>
+        {/* <label>
           <span>Sponsorship?</span>
           <Select
             options={sponsorshipTypeOptions}
@@ -294,11 +285,11 @@ export default function Index() {
             }}
             aria-label='Sponsorship Type'
           />
-        </label>
+        </label> */}
       </div>
-      {!companies ? (
+      {!filteredCompanies ? (
         <p>Loading...</p>
-      ) : !companies.length ? (
+      ) : !filteredCompanies.length ? (
         <p>No companies found</p>
       ) : (
         <div className={styles.table}>
@@ -309,7 +300,7 @@ export default function Index() {
             <div className={styles.small}>levels.fyi</div>
             <div className={styles.small}>Applied</div>
           </div>
-          {companies.map((company, i) => (
+          {filteredCompanies.map((company, i) => (
             <div
               className={
                 company.applied
