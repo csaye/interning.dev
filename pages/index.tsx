@@ -153,7 +153,7 @@ export default function Index() {
   function updateApplied(applied: boolean, internship: Internship) {
     if (!internships) return
     const newInternships = internships.map((i) =>
-      i.name === internship.name ? { ...i, applied } : i
+      parseName(i.name) === parseName(internship.name) ? { ...i, applied } : i
     )
     setInternships(newInternships)
 
