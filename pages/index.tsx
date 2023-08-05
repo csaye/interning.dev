@@ -1,10 +1,10 @@
-import Cell from '@/components/Cell'
 import levels from '@/levels.fyi.json'
 import styles from '@/styles/pages/Index.module.scss'
 import { getInternships } from '@/utils/getInternships'
 import { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
 import { Company, Internship } from '@/utils/types'
+import { LOCK_EMOJI } from '@/utils/parse'
 
 const closedTypeOptions = [
   { value: 'all', label: 'All' },
@@ -36,23 +36,6 @@ export default function Index() {
     sponsorshipTypeOptions[0]
   )
   const [companies, setCompanies] = useState<Company[] | null>(null)
-
-  // update companies when internships update
-  useEffect(() => {
-    if (!internships) return
-
-    const newCompanies: Company[] = []
-    for (const { company } of internships) {
-      if (!newCompanies.some(({ name }) => name === company)) {
-        newCompanies.push({ name: company, applied: getApplied(company) })
-      }
-    }
-    setCompanies(newCompanies)
-
-    function getApplied(company: string) {
-      return window.localStorage.getItem(`Applied: ${company}`) === 'yes'
-    }
-  }, [internships])
 
   // filter internships
   const filteredInternships = useMemo(() => {
@@ -90,6 +73,32 @@ export default function Index() {
     if (flipped) newInternships.reverse()
     return newInternships
   }, [internships, flipped])
+
+  // update companies when internships update
+  useEffect(() => {
+    if (!filteredInternships) return
+
+    const newCompanies: Company[] = []
+    for (const internship of filteredInternships) {
+      const company = newCompanies.find(
+        ({ name }) => name === internship.company
+      )
+      if (company) {
+        company.internships.push(internship)
+      } else {
+        newCompanies.push({
+          name: internship.company,
+          applied: getApplied(internship.company),
+          internships: [internship],
+        })
+      }
+    }
+    setCompanies(newCompanies)
+
+    function getApplied(company: string) {
+      return window.localStorage.getItem(`Applied: ${company}`) === 'yes'
+    }
+  }, [filteredInternships])
 
   // initialize settings on start
   useEffect(() => {
@@ -150,7 +159,7 @@ export default function Index() {
     }
   }
 
-  function getLevels({ company }: Internship) {
+  function getLevels(company: string) {
     const level: string | undefined = (levels as any)[company]
     if (!level) return null
 
@@ -295,6 +304,7 @@ export default function Index() {
         <div className={styles.table}>
           <div className={styles.row}>
             <div>Company</div>
+            <div>Locations</div>
             <div>Internships</div>
             <div className={styles.small}>levels.fyi</div>
             <div className={styles.small}>Applied</div>
@@ -309,6 +319,17 @@ export default function Index() {
               key={i}
             >
               <div>{company.name}</div>
+              <div>
+                {company.internships.map((internship, i) => (
+                  <div key={i}>{internship.location}</div>
+                ))}
+              </div>
+              <div>
+                {company.internships.map((internship, i) => (
+                  <InternshipData {...internship} key={i} />
+                ))}
+              </div>
+              <div className={styles.small}>{getLevels(company.name)}</div>
               <div className={styles.small}>
                 <input
                   checked={company.applied}
@@ -355,6 +376,23 @@ export default function Index() {
           ⬆️
         </button>
       </div>
+    </div>
+  )
+}
+
+function InternshipData({ description, link }: Internship) {
+  if (link === LOCK_EMOJI)
+    return (
+      <div>
+        {LOCK_EMOJI} {description}
+      </div>
+    )
+
+  return (
+    <div>
+      <a href={link} target='_blank' rel='noopener noreferrer'>
+        {description}
+      </a>
     </div>
   )
 }

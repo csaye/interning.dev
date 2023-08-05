@@ -1,4 +1,4 @@
-const LOCK_EMOJI = '🔒'
+export const LOCK_EMOJI = '🔒'
 
 export function parseName(rawName: string) {
   const name = rawName.replaceAll('*', '')
@@ -20,4 +20,8 @@ export function parseLink(rawLink: string) {
   }
 
   return rawLink
+}
+
+export function parseLocation(rawLocation: string) {
+  return rawLocation.replaceAll(/<\/?br\s*\/?>/g, ' & ')
 }

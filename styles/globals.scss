@@ -24,6 +24,10 @@ a {
   &:hover {
     text-decoration: underline;
   }
+
+  &:visited {
+    color: purple;
+  }
 }
 
 button {

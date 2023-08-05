@@ -8,4 +8,5 @@ export type Internship = {
 export type Company = {
   name: string
   applied: boolean
+  internships: Internship[]
 }

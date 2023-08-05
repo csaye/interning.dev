@@ -1,4 +1,4 @@
-import { parseLink, parseName } from './parse'
+import { parseLink, parseLocation, parseName } from './parse'
 import { Internship } from './types'
 
 const url =
@@ -38,7 +38,7 @@ export async function getInternships() {
       ({
         company: parseName(job[0]),
         description: job[1],
-        location: job[2],
+        location: parseLocation(job[2]),
         link: parseLink(job[3]),
       } satisfies Internship)
   )
