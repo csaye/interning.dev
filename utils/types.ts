@@ -1,7 +1,11 @@
 export type Internship = {
-  name: string
-  notes: string
+  company: string
   location: string
+  description: string
   link: string
+}
+
+export type Company = {
+  name: string
   applied: boolean
 }

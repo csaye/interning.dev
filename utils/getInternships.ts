@@ -1,4 +1,4 @@
-import { parseName } from './parseName'
+import { parseLink, parseName } from './parse'
 import { Internship } from './types'
 
 const url =
@@ -36,16 +36,10 @@ export async function getInternships() {
   return jobs.map(
     (job) =>
       ({
-        name: job[0],
-        notes: job[1],
+        company: parseName(job[0]),
+        description: job[1],
         location: job[2],
-        link: job[3],
-        applied: getApplied(job[0]),
+        link: parseLink(job[3]),
       } satisfies Internship)
   )
-
-  function getApplied(name: string) {
-    const jobName = parseName(name)
-    return window.localStorage.getItem(`Applied: ${jobName}`) === 'yes'
-  }
 }

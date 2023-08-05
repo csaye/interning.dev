@@ -2,10 +2,9 @@ import Cell from '@/components/Cell'
 import levels from '@/levels.fyi.json'
 import styles from '@/styles/pages/Index.module.scss'
 import { getInternships } from '@/utils/getInternships'
-import { Internship } from '@/utils/types'
 import { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
-import { parseName } from '@/utils/parseName'
+import { Company, Internship } from '@/utils/types'
 
 const closedTypeOptions = [
   { value: 'all', label: 'All' },
@@ -36,49 +35,61 @@ export default function Index() {
   const [sponsorshipType, setSponsorshipType] = useState(
     sponsorshipTypeOptions[0]
   )
+  const [companies, setCompanies] = useState<Company[] | null>(null)
+
+  // update companies when internships update
+  useEffect(() => {
+    if (!internships) return
+
+    const newCompanies: Company[] = []
+    for (const { company } of internships) {
+      if (!newCompanies.some(({ name }) => name === company)) {
+        newCompanies.push({ name: company, applied: getApplied(company) })
+      }
+    }
+    setCompanies(newCompanies)
+
+    function getApplied(company: string) {
+      return window.localStorage.getItem(`Applied: ${company}`) === 'yes'
+    }
+  }, [internships])
 
   // filter internships
   const filteredInternships = useMemo(() => {
     if (!internships) return null
-    const newInternships = internships.filter((internship) => {
-      const { name, location, notes, applied } = internship
-      const text = filterText.toLowerCase()
+    const newInternships = [...internships]
+    // const newInternships = internships.filter((internship) => {
+    //   const { name, location, notes, applied } = internship
+    //   const text = filterText.toLowerCase()
 
-      const textMatch =
-        !filterText ||
-        name.toLowerCase().includes(text) ||
-        location.toLowerCase().includes(text) ||
-        notes.toLowerCase().includes(text)
+    //   const textMatch =
+    //     !filterText ||
+    //     name.toLowerCase().includes(text) ||
+    //     location.toLowerCase().includes(text) ||
+    //     notes.toLowerCase().includes(text)
 
-      const closedMatch =
-        closedType.value === 'all' ||
-        (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
+    //   const closedMatch =
+    //     closedType.value === 'all' ||
+    //     (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
 
-      const appliedMatch =
-        appliedType.value === 'all' || (appliedType.value === 'yes') === applied
+    //   const appliedMatch =
+    //     appliedType.value === 'all' || (appliedType.value === 'yes') === applied
 
-      const hasCitizen = notes.toLowerCase().includes('citizen')
-      const hasSponsorship =
-        !notes.toLowerCase().includes('no sponsorship') && !hasCitizen
+    //   const hasCitizen = notes.toLowerCase().includes('citizen')
+    //   const hasSponsorship =
+    //     !notes.toLowerCase().includes('no sponsorship') && !hasCitizen
 
-      const sponsorshipMatch =
-        sponsorshipType.value === 'all' ||
-        (sponsorshipType.value === 'yes' && hasSponsorship) ||
-        (sponsorshipType.value === 'green_card' && !hasCitizen) ||
-        (sponsorshipType.value === 'no' && !hasSponsorship)
+    //   const sponsorshipMatch =
+    //     sponsorshipType.value === 'all' ||
+    //     (sponsorshipType.value === 'yes' && hasSponsorship) ||
+    //     (sponsorshipType.value === 'green_card' && !hasCitizen) ||
+    //     (sponsorshipType.value === 'no' && !hasSponsorship)
 
-      return textMatch && closedMatch && appliedMatch && sponsorshipMatch
-    })
+    //   return textMatch && closedMatch && appliedMatch && sponsorshipMatch
+    // })
     if (flipped) newInternships.reverse()
     return newInternships
-  }, [
-    internships,
-    flipped,
-    filterText,
-    closedType.value,
-    appliedType.value,
-    sponsorshipType.value,
-  ])
+  }, [internships, flipped])
 
   // initialize settings on start
   useEffect(() => {
@@ -98,16 +109,15 @@ export default function Index() {
   }, [])
 
   // updates applied status for given internship
-  function updateApplied(applied: boolean, internship: Internship) {
-    if (!internships) return
-    const newInternships = internships.map((i) =>
-      parseName(i.name) === parseName(internship.name) ? { ...i, applied } : i
+  function updateApplied(applied: boolean, company: string) {
+    if (!companies) return
+    const newCompanies = companies.map((c) =>
+      c.name === company ? { ...c, applied } : c
     )
-    setInternships(newInternships)
+    setCompanies(newCompanies)
 
     // update local storage
-    const jobName = parseName(internship.name)
-    window.localStorage.setItem(`Applied: ${jobName}`, applied ? 'yes' : 'no')
+    window.localStorage.setItem(`Applied: ${company}`, applied ? 'yes' : 'no')
   }
 
   function toggleDarkMode() {
@@ -140,9 +150,8 @@ export default function Index() {
     }
   }
 
-  function getLevels(internship: Internship) {
-    const name = parseName(internship.name)
-    const level: string | undefined = (levels as any)[name]
+  function getLevels({ company }: Internship) {
+    const level: string | undefined = (levels as any)[company]
     if (!level) return null
 
     return (
@@ -222,20 +231,19 @@ export default function Index() {
           🔄
         </button>
       </div>
-      {internships && (
+      {companies && (
         <p>
           You have applied to{' '}
           <b>
-            {internships.filter((i) => i.applied).length}/{internships.length}
+            {companies.filter((c) => c.applied).length}/{companies.length}
           </b>{' '}
-          internships!
-          {filteredInternships &&
-            filteredInternships.length !== internships.length && (
-              <>
-                {' '}
-                (showing <b>{filteredInternships.length})</b>
-              </>
-            )}
+          companies!
+          {filteredInternships && (
+            <>
+              {' '}
+              (showing <b>{filteredInternships.length}</b> internships)
+            </>
+          )}
         </p>
       )}
       <div className={styles.filters}>
@@ -279,21 +287,41 @@ export default function Index() {
           />
         </label>
       </div>
-      {!filteredInternships ? (
+      {!companies ? (
         <p>Loading...</p>
-      ) : !filteredInternships.length ? (
-        <p>No internships found</p>
+      ) : !companies.length ? (
+        <p>No companies found</p>
       ) : (
         <div className={styles.table}>
           <div className={styles.row}>
-            <div>Name</div>
-            <div>Location</div>
-            <div>Notes</div>
-            <div className={styles.small}>Link</div>
+            <div>Company</div>
+            <div>Internships</div>
             <div className={styles.small}>levels.fyi</div>
             <div className={styles.small}>Applied</div>
           </div>
-          {filteredInternships.map((internship, i) => (
+          {companies.map((company, i) => (
+            <div
+              className={
+                company.applied
+                  ? `${styles.row} ${styles.selected}`
+                  : styles.row
+              }
+              key={i}
+            >
+              <div>{company.name}</div>
+              <div className={styles.small}>
+                <input
+                  checked={company.applied}
+                  onChange={(e) =>
+                    updateApplied(e.target.checked, company.name)
+                  }
+                  type='checkbox'
+                  aria-label='Applied Status Checkbox'
+                />
+              </div>
+            </div>
+          ))}
+          {/* {filteredInternships.map((internship, i) => (
             <div
               className={
                 internship.applied
@@ -316,7 +344,7 @@ export default function Index() {
                 />
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       )}
       <div className={styles.footer}>
