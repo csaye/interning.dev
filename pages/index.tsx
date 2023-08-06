@@ -26,11 +26,10 @@ const sponsorshipTypeOptions = [
 ]
 
 export default function Index() {
-  // const [internships, setInternships] = useState<Internship[] | null>(null)
   const [darkMode, setDarkMode] = useState(false)
   const [flipped, setFlipped] = useState(false)
   const [filterText, setFilterText] = useState('')
-  // const [closedType, setClosedType] = useState(closedTypeOptions[0])
+  const [closedType, setClosedType] = useState(closedTypeOptions[0])
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
   // const [sponsorshipType, setSponsorshipType] = useState(
   // sponsorshipTypeOptions[0]
@@ -40,28 +39,40 @@ export default function Index() {
   const filteredCompanies = useMemo(() => {
     if (!companies) return null
 
-    const newCompanies = companies.filter((company) => {
-      const { applied, internships, name } = company
+    const newCompanies = companies
+      .map((company) => ({
+        ...company,
+        internships: company.internships.filter(
+          (internship) =>
+            closedType.value === 'all' ||
+            (closedType.value === 'yes') === (internship.link === LOCK_EMOJI)
+        ),
+      }))
+      .filter((company) => {
+        if (!company.internships.length) return false
 
-      const appliedMatch =
-        appliedType.value === 'all' || (appliedType.value === 'yes') === applied
+        const { applied, internships, name } = company
 
-      const text = filterText.toLowerCase()
-      const textMatch =
-        !text ||
-        name.toLowerCase().includes(text) ||
-        internships.some(
-          ({ description, location }) =>
-            description.toLowerCase().includes(text) ||
-            location.toLowerCase().includes(text)
-        )
+        const appliedMatch =
+          appliedType.value === 'all' ||
+          (appliedType.value === 'yes') === applied
 
-      return appliedMatch && textMatch
-    })
+        const text = filterText.toLowerCase()
+        const textMatch =
+          !text ||
+          name.toLowerCase().includes(text) ||
+          internships.some(
+            ({ description, location }) =>
+              description.toLowerCase().includes(text) ||
+              location.toLowerCase().includes(text)
+          )
+
+        return appliedMatch && textMatch
+      })
 
     if (flipped) newCompanies.reverse()
     return newCompanies
-  }, [appliedType.value, companies, filterText, flipped])
+  }, [appliedType.value, closedType.value, companies, filterText, flipped])
 
   // // filter internships
   // const filteredInternships = useMemo(() => {
@@ -266,7 +277,7 @@ export default function Index() {
           placeholder='Filter by text...'
         />
         <span style={{ flexGrow: 1 }} />
-        {/* <label>
+        <label>
           <span>Closed?</span>
           <Select
             options={closedTypeOptions}
@@ -276,7 +287,7 @@ export default function Index() {
             }}
             aria-label='Closed Type'
           />
-        </label> */}
+        </label>
         <label>
           <span>Applied?</span>
           <Select
