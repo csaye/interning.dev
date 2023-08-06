@@ -40,15 +40,28 @@ export default function Index() {
   const filteredCompanies = useMemo(() => {
     if (!companies) return null
 
-    const newCompanies = companies.filter(({ applied }) => {
+    const newCompanies = companies.filter((company) => {
+      const { applied, internships, name } = company
+
       const appliedMatch =
         appliedType.value === 'all' || (appliedType.value === 'yes') === applied
-      return appliedMatch
+
+      const text = filterText.toLowerCase()
+      const textMatch =
+        !text ||
+        name.toLowerCase().includes(text) ||
+        internships.some(
+          ({ description, location }) =>
+            description.toLowerCase().includes(text) ||
+            location.toLowerCase().includes(text)
+        )
+
+      return appliedMatch && textMatch
     })
 
     if (flipped) newCompanies.reverse()
     return newCompanies
-  }, [appliedType.value, companies, flipped])
+  }, [appliedType.value, companies, filterText, flipped])
 
   // // filter internships
   // const filteredInternships = useMemo(() => {
