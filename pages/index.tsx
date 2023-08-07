@@ -89,43 +89,6 @@ export default function Index() {
     sponsorshipType.value,
   ])
 
-  // // filter internships
-  // const filteredInternships = useMemo(() => {
-  //   if (!internships) return null
-  //   const newInternships = [...internships]
-  // const newInternships = internships.filter((internship) => {
-  //   const { name, location, notes, applied } = internship
-  //   const text = filterText.toLowerCase()
-
-  //   const textMatch =
-  //     !filterText ||
-  //     name.toLowerCase().includes(text) ||
-  //     location.toLowerCase().includes(text) ||
-  //     notes.toLowerCase().includes(text)
-
-  //   const closedMatch =
-  //     closedType.value === 'all' ||
-  //     (closedType.value === 'yes') === notes.includes('🔒 Closed 🔒')
-
-  //   const appliedMatch =
-  //     appliedType.value === 'all' || (appliedType.value === 'yes') === applied
-
-  //   const hasCitizen = notes.toLowerCase().includes('citizen')
-  //   const hasSponsorship =
-  //     !notes.toLowerCase().includes('no sponsorship') && !hasCitizen
-
-  //   const sponsorshipMatch =
-  //     sponsorshipType.value === 'all' ||
-  //     (sponsorshipType.value === 'yes' && hasSponsorship) ||
-  //     (sponsorshipType.value === 'green_card' && !hasCitizen) ||
-  //     (sponsorshipType.value === 'no' && !hasSponsorship)
-
-  //   return textMatch && closedMatch && appliedMatch && sponsorshipMatch
-  // })
-  //   if (flipped) newInternships.reverse()
-  //   return newInternships
-  // }, [internships, flipped])
-
   // initialize settings on start
   useEffect(() => {
     setDarkMode(window.localStorage.getItem('dark-mode') === 'yes')
@@ -372,30 +335,6 @@ export default function Index() {
               </div>
             </div>
           ))}
-          {/* {filteredInternships.map((internship, i) => (
-            <div
-              className={
-                internship.applied
-                  ? `${styles.row} ${styles.selected}`
-                  : styles.row
-              }
-              key={i}
-            >
-              <Cell text={internship.name} />
-              <Cell text={internship.location} />
-              <Cell text={internship.notes} />
-              <div className={styles.small}>{getLink(internship.link)}</div>
-              <div className={styles.small}>{getLevels(internship)}</div>
-              <div className={styles.small}>
-                <input
-                  checked={internship.applied}
-                  onChange={(e) => updateApplied(e.target.checked, internship)}
-                  type='checkbox'
-                  aria-label='Applied Status Checkbox'
-                />
-              </div>
-            </div>
-          ))} */}
         </div>
       )}
       <div className={styles.footer}>
