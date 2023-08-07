@@ -20,9 +20,8 @@ const appliedTypeOptions = [
 
 const sponsorshipTypeOptions = [
   { value: 'all', label: 'All' },
-  { value: 'green_card', label: 'US Citizenship Not Required' },
-  { value: 'yes', label: 'Sponsorship Offered' },
-  { value: 'no', label: 'No Sponsorship' },
+  { value: 'citizenship', label: 'U.S Citizenship Not Required' },
+  { value: 'sponsorship', label: 'Sponsorship Offered' },
 ]
 
 export default function Index() {
@@ -31,9 +30,9 @@ export default function Index() {
   const [filterText, setFilterText] = useState('')
   const [closedType, setClosedType] = useState(closedTypeOptions[0])
   const [appliedType, setAppliedType] = useState(appliedTypeOptions[0])
-  // const [sponsorshipType, setSponsorshipType] = useState(
-  // sponsorshipTypeOptions[0]
-  // )
+  const [sponsorshipType, setSponsorshipType] = useState(
+    sponsorshipTypeOptions[0]
+  )
   const [companies, setCompanies] = useState<Company[] | null>(null)
 
   const filteredCompanies = useMemo(() => {
@@ -42,11 +41,20 @@ export default function Index() {
     const newCompanies = companies
       .map((company) => ({
         ...company,
-        internships: company.internships.filter(
-          (internship) =>
+        internships: company.internships.filter((internship) => {
+          const closedMatch =
             closedType.value === 'all' ||
             (closedType.value === 'yes') === (internship.link === LOCK_EMOJI)
-        ),
+
+          const sponsorshipMatch =
+            sponsorshipType.value === 'all' ||
+            (sponsorshipType.value === 'citizenship' &&
+              !internship.description.includes('Citizenship Required')) ||
+            (sponsorshipType.value === 'sponsorship' &&
+              !internship.description.includes('No Sponsorship'))
+
+          return closedMatch && sponsorshipMatch
+        }),
       }))
       .filter((company) => {
         if (!company.internships.length) return false
@@ -72,7 +80,14 @@ export default function Index() {
 
     if (flipped) newCompanies.reverse()
     return newCompanies
-  }, [appliedType.value, closedType.value, companies, filterText, flipped])
+  }, [
+    appliedType.value,
+    closedType.value,
+    companies,
+    filterText,
+    flipped,
+    sponsorshipType.value,
+  ])
 
   // // filter internships
   // const filteredInternships = useMemo(() => {
@@ -299,7 +314,7 @@ export default function Index() {
             aria-label='Applied Type'
           />
         </label>
-        {/* <label>
+        <label>
           <span>Sponsorship?</span>
           <Select
             options={sponsorshipTypeOptions}
@@ -309,7 +324,7 @@ export default function Index() {
             }}
             aria-label='Sponsorship Type'
           />
-        </label> */}
+        </label>
       </div>
       {!filteredCompanies ? (
         <p>Loading...</p>
