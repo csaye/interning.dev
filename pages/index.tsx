@@ -3,7 +3,7 @@ import styles from '@/styles/pages/Index.module.scss'
 import { getInternships } from '@/utils/getInternships'
 import { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
-import { Company, Internship } from '@/utils/types'
+import { ApplicationStatus, Company, Internship } from '@/utils/types'
 import { LOCK_EMOJI } from '@/utils/parse'
 
 const closedTypeOptions = [
@@ -22,6 +22,14 @@ const sponsorshipTypeOptions = [
   { value: 'all', label: 'All' },
   { value: 'citizenship', label: 'U.S Citizenship Not Required' },
   { value: 'sponsorship', label: 'Sponsorship Offered' },
+]
+
+const statusTypeOptions = [
+  { value: 'none', label: 'None' },
+  { value: 'waiting', label: 'Waiting' },
+  { value: 'oa', label: 'Got OA' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'offer', label: 'Offer' },
 ]
 
 export default function Index() {
@@ -111,6 +119,7 @@ export default function Index() {
         newCompanies.push({
           name: internship.company,
           applied: getApplied(internship.company),
+          status: getStatus(internship.company),
           internships: [internship],
         })
       }
@@ -120,6 +129,11 @@ export default function Index() {
 
     function getApplied(company: string) {
       return window.localStorage.getItem(`Applied: ${company}`) === 'yes'
+    }
+
+    function getStatus(company: string) {
+      return (window.localStorage.getItem(`Status: ${company}`) ??
+        'none') as ApplicationStatus
     }
   }
 
@@ -138,6 +152,17 @@ export default function Index() {
 
     // update local storage
     window.localStorage.setItem(`Applied: ${company}`, applied ? 'yes' : 'no')
+  }
+
+  function updateStatus(status: ApplicationStatus, company: string) {
+    if (!companies) return
+    const newCompanies = companies.map((c) =>
+      c.name === company ? { ...c, status } : c
+    )
+    setCompanies(newCompanies)
+
+    // update local storage
+    window.localStorage.setItem(`Status: ${company}`, status)
   }
 
   function toggleDarkMode() {
@@ -301,6 +326,7 @@ export default function Index() {
             <div>Internships</div>
             <div className={styles.small}>levels.fyi</div>
             <div className={styles.small}>Applied</div>
+            <div className={styles.medium}>Status</div>
           </div>
           {filteredCompanies.map((company, i) => (
             <div
@@ -331,6 +357,21 @@ export default function Index() {
                   }
                   type='checkbox'
                   aria-label='Applied Status Checkbox'
+                />
+              </div>
+              <div className={styles.medium}>
+                <Select
+                  options={statusTypeOptions}
+                  value={statusTypeOptions.find(
+                    ({ value }) => value === company.status
+                  )}
+                  onChange={(value) =>
+                    updateStatus(
+                      (value?.value ?? 'none') as ApplicationStatus,
+                      company.name
+                    )
+                  }
+                  aria-label='Application Status'
                 />
               </div>
             </div>

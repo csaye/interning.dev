@@ -143,6 +143,11 @@
           }
         }
 
+        &.medium {
+          min-width: 160px;
+          flex-grow: 0;
+        }
+
         &:not(:last-of-type) {
           border-right: 1px solid #000;
         }
