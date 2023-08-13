@@ -21,7 +21,7 @@ const appliedTypeOptions = [
 const sponsorshipTypeOptions = [
   { value: 'all', label: 'All' },
   { value: 'citizenship', label: 'U.S Citizenship Not Required' },
-  { value: 'sponsorship', label: 'Sponsorship Offered' },
+  { value: 'sponsorship', label: 'May Offer Sponsorship' },
 ]
 
 const statusTypeOptions = [
@@ -57,9 +57,9 @@ export default function Index() {
           const sponsorshipMatch =
             sponsorshipType.value === 'all' ||
             (sponsorshipType.value === 'citizenship' &&
-              !internship.description.includes('Citizenship Required')) ||
+              !internship.description.includes('🇺🇸')) ||
             (sponsorshipType.value === 'sponsorship' &&
-              !internship.description.includes('No Sponsorship'))
+              !internship.description.includes('🛂'))
 
           return closedMatch && sponsorshipMatch
         }),
