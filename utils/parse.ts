@@ -22,6 +22,11 @@ export function parseLink(rawLink: string) {
   return rawLink
 }
 
-export function parseLocation(rawLocation: string) {
-  return rawLocation.replaceAll(/<\/?br\s*\/?>/g, ' & ')
+export function parseLocations(rawLocation: string) {
+  let locationText = rawLocation.replaceAll(/<\/?br\s*\/?>/g, '\n')
+  locationText = locationText.replaceAll('</details>', '')
+  if (locationText.includes('</summary>')) {
+    locationText = locationText.split('</summary>')[1]
+  }
+  return locationText.split('\n').map((location) => location.trim())
 }

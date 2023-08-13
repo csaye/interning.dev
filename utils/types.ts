@@ -1,6 +1,6 @@
 export type Internship = {
   company: string
-  location: string
+  locations: string[]
   description: string
   link: string
 }
