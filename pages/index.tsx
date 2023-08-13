@@ -78,9 +78,9 @@ export default function Index() {
           !text ||
           name.toLowerCase().includes(text) ||
           internships.some(
-            ({ description, location }) =>
+            ({ description, locations }) =>
               description.toLowerCase().includes(text) ||
-              location.toLowerCase().includes(text)
+              locations.join('\n').toLowerCase().includes(text)
           )
 
         return appliedMatch && textMatch
@@ -185,6 +185,15 @@ export default function Index() {
       <a href={level} target='_blank' rel='noopener noreferrer'>
         🔗
       </a>
+    )
+  }
+
+  function getLocations(company: Company) {
+    const locations = company.internships.flatMap(
+      (internship) => internship.locations
+    )
+    return locations.filter(
+      (location, index) => locations.indexOf(location) === index
     )
   }
 
@@ -338,10 +347,8 @@ export default function Index() {
               key={i}
             >
               <div>{company.name}</div>
-              <div>
-                {company.internships.map((internship, i) => (
-                  <div key={i}>{internship.location}</div>
-                ))}
+              <div className={styles.locations}>
+                {getLocations(company).join('\n')}
               </div>
               <div>
                 {company.internships.map((internship, i) => (

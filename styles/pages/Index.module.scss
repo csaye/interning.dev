@@ -116,6 +116,10 @@
         background: #fffdcc;
       }
 
+      > .locations {
+        white-space: pre-wrap;
+      }
+
       > div {
         padding: 16px;
         flex-basis: 0;
