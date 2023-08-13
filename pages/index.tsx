@@ -32,6 +32,11 @@ const statusTypeOptions = [
   { value: 'offer', label: 'Offer' },
 ]
 
+const statusTypeMap: { [value: string]: (typeof statusTypeOptions)[0] } = {}
+for (const option of statusTypeOptions) {
+  statusTypeMap[option.value] = option
+}
+
 export default function Index() {
   const [darkMode, setDarkMode] = useState(false)
   const [flipped, setFlipped] = useState(false)
@@ -369,9 +374,7 @@ export default function Index() {
               <div className={styles.medium}>
                 <Select
                   options={statusTypeOptions}
-                  value={statusTypeOptions.find(
-                    ({ value }) => value === company.status
-                  )}
+                  value={statusTypeMap[company.status]}
                   onChange={(value) =>
                     updateStatus(
                       (value?.value ?? 'none') as ApplicationStatus,
