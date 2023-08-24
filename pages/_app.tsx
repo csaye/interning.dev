@@ -31,6 +31,7 @@ export default function App(props: AppProps) {
           sizes='16x16'
           href='/favicons/favicon-16x16.png'
         />
+        <link rel='manifest' href='/manifest.json' />
       </Head>
       <Component {...pageProps} />
     </>
