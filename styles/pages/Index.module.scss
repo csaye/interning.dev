@@ -125,6 +125,8 @@
         flex-basis: 0;
         flex-grow: 1;
         min-width: 140px;
+        max-height: 300px;
+        overflow: scroll;
 
         &:nth-of-type(3) {
           flex-grow: 3;
