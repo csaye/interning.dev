@@ -31,15 +31,22 @@ export async function getInternships() {
     line
       .split('|')
       .map((text) => text.trim())
-      .filter((text) => !!text)
+      .slice(1)
   )
-  return jobs.map(
-    (job) =>
-      ({
-        company: parseName(job[0]),
-        description: job[1],
-        locations: parseLocations(job[2]),
-        link: parseLink(job[3]),
-      } satisfies Internship)
-  )
+
+  let company = 'N/A'
+  const internships: Internship[] = []
+
+  for (const job of jobs) {
+    if (job[0]) company = parseName(job[0])
+
+    internships.push({
+      company,
+      description: job[1],
+      locations: parseLocations(job[2]),
+      link: parseLink(job[3]),
+    })
+  }
+
+  return internships
 }
