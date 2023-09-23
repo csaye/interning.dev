@@ -14,8 +14,9 @@ export function parseLink(rawLink: string) {
   if (rawLink.includes('LOCK_EMOJI')) return LOCK_EMOJI
 
   if (rawLink.includes('<a href="')) {
-    const link = rawLink.split('<a href="')[1].split('">')[0]
-    if (link.includes('?utm_source')) return link.split('?utm_source')[0]
+    let link = rawLink.split('<a href="')[1].split('">')[0]
+    if (link.includes('?utm_source')) link = link.split('?utm_source')[0]
+    if (link.includes('&utm_source')) link = link.split('&utm_source')[0]
     return link
   }
 
