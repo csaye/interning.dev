@@ -38,7 +38,7 @@ export async function getInternships() {
   const internships: Internship[] = []
 
   for (const job of jobs) {
-    if (job[0]) company = parseName(job[0])
+    if (job[0] && job[0] != '↳') company = parseName(job[0])
 
     internships.push({
       company,
